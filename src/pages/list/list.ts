@@ -12,7 +12,9 @@ export class ListPage {
 
   places;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController) { }
+
+  ionViewWillEnter() {
     this.places = JSON.parse(window.localStorage.getItem('savedLocations'));
   }
 

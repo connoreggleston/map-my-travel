@@ -16,6 +16,7 @@ export class HomePage {
   mapInitialised: boolean = false;
   mapOptions;
   allowLocationAdd: boolean = true;
+  allowLocationDelete: boolean = false;
 
   constructor(public navCtrl: NavController, private navParams: NavParams) {
     const mapCenter = navParams.get('mapCenter') || new google.maps.LatLng(37.7909475, -122.40695499999998);
@@ -32,7 +33,7 @@ export class HomePage {
     this._setLocation = this._setLocation.bind(this);
   }
 
-  ngAfterViewInit() {
+  ionViewWillEnter() {
     this._loadGoogleMaps();
     this._loadAutocomplete(document.getElementById('autocomplete').getElementsByTagName('input')[0]);
   }
@@ -66,6 +67,13 @@ export class HomePage {
       .catch(error => alert(error));
   }
 
+  deleteLocation() {
+    let locations = JSON.parse(window.localStorage.getItem('savedLocations'));
+    locations.splice(locations.map(location => location.name).indexOf(this.searchInput), 1);
+    window.localStorage.setItem('savedLocations', JSON.stringify(locations));
+    this.navCtrl.pop();
+  }
+
   _loadGoogleMaps() {
     if (typeof google == 'undefined' || typeof google.maps == 'undefined') {
       console.log('Google maps JavaScript needs to be loaded.');
@@ -80,10 +88,11 @@ export class HomePage {
       if (!window.localStorage.getItem('savedLocations')) {
         window.localStorage.setItem('savedLocations', JSON.stringify([]));
       } else {
-        let locations = JSON.parse(window.localStorage.getItem('savedLocations'));
+        const locations = JSON.parse(window.localStorage.getItem('savedLocations'));
         for (let location of locations) {
+          const coords = new google.maps.LatLng(location.geometry.location.lat, location.geometry.location.lng);
           new google.maps.Marker({
-            position: location,
+            position: coords,
             map: this.map
           });
         }
@@ -95,6 +104,8 @@ export class HomePage {
     const placeName = this.navParams.get('placeName');
     if (placeName) {
       this.searchInput = placeName;
+      this.allowLocationAdd = false;
+      this.allowLocationDelete = true;
     }
     this.autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
     this.autocomplete.addListener('place_changed', this._setLocation);
