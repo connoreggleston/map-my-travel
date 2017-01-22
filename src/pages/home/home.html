@@ -17,6 +17,7 @@
     </ion-item>
   </div>
 </ion-content>
-<ion-footer id="add-location" [hidden]="!allowLocationAdd">
-  <button ion-button color="secondary" full (click)="addLocation()">Add Location</button>
+<ion-footer id="add-location">
+  <button [hidden]="!allowLocationAdd" ion-button color="secondary" full (click)="addLocation()">Add Location</button>
+  <button [hidden]="!allowLocationDelete" ion-button color="danger" full (click)="deleteLocation()">Remove Location</button>
 </ion-footer>

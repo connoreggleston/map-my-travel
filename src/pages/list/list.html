@@ -8,9 +8,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list *ngIf="places && places.length > 0">
     <button ion-item *ngFor="let place of places" (click)="clickPlace(place)">
       {{place.name}}
     </button>
   </ion-list>
+  <div class="empty-list" *ngIf="!places || places.length === 0">You don't have any saved places.</div>
 </ion-content>
