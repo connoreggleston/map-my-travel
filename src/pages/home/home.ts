@@ -1,5 +1,5 @@
-import {Component, ElementRef, ViewChild, Renderer} from '@angular/core';
-import {NavController} from "ionic-angular";
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {NavController, NavParams} from "ionic-angular";
 
 declare const google;
 
@@ -16,9 +16,10 @@ export class HomePage {
   mapInitialised: boolean = false;
   mapOptions;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private navParams: NavParams) {
+    const mapCenter = navParams.get('mapCenter') || new google.maps.LatLng(37.7909475, -122.40695499999998);
     this.mapOptions = {
-      center: new google.maps.LatLng(37.7909475, -122.40695499999998),
+      center: mapCenter,
       zoom: 12,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       zoomControl: false,
@@ -58,7 +59,7 @@ export class HomePage {
       map: this.map
     });
 
-    this._savePlace(location)
+    this._savePlace(place)
       .then(() => console.log('successful save'))
       .catch(error => alert(error));
   }
@@ -98,10 +99,10 @@ export class HomePage {
     this.map.panTo(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()));
   }
 
-  _savePlace(location) {
+  _savePlace(place) {
     return new Promise((resolve, reject) => {
       let savedLocations = JSON.parse(window.localStorage.getItem('savedLocations'));
-      savedLocations.push(location);
+      savedLocations.push(place);
       try {
         window.localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
         resolve();
