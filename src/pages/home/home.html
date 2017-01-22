@@ -12,11 +12,11 @@
   <div #map id="map"></div>
   <div class="row" id="search">
     <ion-item>
-      <ion-input [(ngModel)]="searchInput" id="autocomplete" type="text" placeholder="Search" icon="ion-close"></ion-input>
+      <ion-input [(ngModel)]="searchInput" id="autocomplete" type="text" placeholder="Search for a place"></ion-input>
       <ion-icon [hidden]="!searchInput" name="ios-close" item-right primary (click)="clearSearch()"></ion-icon>
     </ion-item>
   </div>
 </ion-content>
-<ion-footer id="add-location">
+<ion-footer id="add-location" [hidden]="!allowLocationAdd">
   <button ion-button color="secondary" full (click)="addLocation()">Add Location</button>
 </ion-footer>

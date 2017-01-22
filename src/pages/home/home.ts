@@ -15,6 +15,7 @@ export class HomePage {
   searchInput;
   mapInitialised: boolean = false;
   mapOptions;
+  allowLocationAdd: boolean = true;
 
   constructor(public navCtrl: NavController, private navParams: NavParams) {
     const mapCenter = navParams.get('mapCenter') || new google.maps.LatLng(37.7909475, -122.40695499999998);
@@ -27,7 +28,7 @@ export class HomePage {
       streetViewControl: false,
       mapTypeControl: false
     };
-    this.searchInput = document.getElementById('autocomplete');
+    this.searchInput = null;
     this._setLocation = this._setLocation.bind(this);
   }
 
@@ -38,6 +39,7 @@ export class HomePage {
 
   clearSearch() {
     this.searchInput = null;
+    this.allowLocationAdd = false;
   }
 
   addLocation() {
@@ -90,11 +92,16 @@ export class HomePage {
   }
 
   _loadAutocomplete(element) {
+    const placeName = this.navParams.get('placeName');
+    if (placeName) {
+      this.searchInput = placeName;
+    }
     this.autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
     this.autocomplete.addListener('place_changed', this._setLocation);
   }
 
   _setLocation() {
+    this.allowLocationAdd = true;
     const place = this.autocomplete.getPlace();
     this.map.panTo(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()));
   }

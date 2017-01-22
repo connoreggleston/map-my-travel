@@ -18,7 +18,8 @@ export class ListPage {
 
   clickPlace(place) {
     this.navCtrl.push(HomePage, {
-      mapCenter: new google.maps.LatLng(place.geometry.location.lat, place.geometry.location.lng)
+      mapCenter: new google.maps.LatLng(place.geometry.location.lat, place.geometry.location.lng),
+      placeName: place.name
     });
   }
 
