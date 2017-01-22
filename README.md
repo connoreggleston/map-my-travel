@@ -1,20 +1,13 @@
-Ionic 2 App Base
+map-my-travel
 =====================
+An Ionic 2 App for adding locations to a map and viewing them.
 
-This is the base template for Ionic 2 starter apps.
-
-## Using this project
-
-You'll need the Ionic CLI with support for v2 apps:
-
-```bash
-$ npm install -g ionic
+## Installation
 ```
-
+npm install ionic -g
+npm install
+```
 Then run:
-
-```bash
-$ ionic start myApp
 ```
-
-More info on this can be found on the Ionic [Getting Started](http://ionicframework.com/docs/v2/getting-started/) page.
+ionic serve
+```
