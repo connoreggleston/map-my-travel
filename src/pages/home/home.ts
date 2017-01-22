@@ -27,7 +27,7 @@ export class HomePage {
       mapTypeControl: false
     };
     this.searchInput = document.getElementById('autocomplete');
-    this._centerMapForPlace = this._centerMapForPlace.bind(this);
+    this._setLocation = this._setLocation.bind(this);
   }
 
   ngAfterViewInit() {
@@ -37,6 +37,30 @@ export class HomePage {
 
   clearSearch() {
     this.searchInput = null;
+  }
+
+  addLocation() {
+    const place = this.autocomplete.getPlace();
+    let lat;
+    let lng;
+    try {
+      lat = place.geometry.location.lat();
+      lng = place.geometry.location.lng();
+    } catch (e) {
+      alert('Search for a location');
+      return false;
+    }
+
+    const location = new google.maps.LatLng(lat, lng);
+
+    new google.maps.Marker({
+      position: location,
+      map: this.map
+    });
+
+    this._savePlace(location)
+      .then(() => console.log('successful save'))
+      .catch(error => alert(error));
   }
 
   _loadGoogleMaps() {
@@ -50,17 +74,41 @@ export class HomePage {
     else {
       this.mapInitialised = true;
       this.map = new google.maps.Map(this.mapElement.nativeElement, this.mapOptions);
+      if (!window.localStorage.getItem('savedLocations')) {
+        window.localStorage.setItem('savedLocations', JSON.stringify([]));
+      } else {
+        let locations = JSON.parse(window.localStorage.getItem('savedLocations'));
+        for (let location of locations) {
+          new google.maps.Marker({
+            position: location,
+            map: this.map
+          });
+        }
+      }
     }
   }
 
   _loadAutocomplete(element) {
     this.autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
-    this.autocomplete.addListener('place_changed', this._centerMapForPlace);
+    this.autocomplete.addListener('place_changed', this._setLocation);
   }
 
-  _centerMapForPlace() {
+  _setLocation() {
     const place = this.autocomplete.getPlace();
     this.map.panTo(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()));
+  }
+
+  _savePlace(location) {
+    return new Promise((resolve, reject) => {
+      let savedLocations = JSON.parse(window.localStorage.getItem('savedLocations'));
+      savedLocations.push(location);
+      try {
+        window.localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
 
 }
