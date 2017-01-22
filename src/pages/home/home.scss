@@ -1,0 +1,36 @@
+home {
+
+  .scroll-content {
+    height: 100%
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
+  #search {
+    position: absolute;
+    top: 20px;
+    padding: 0 20px;
+    width: 100%;
+    ion-input {
+      background-color: #fff;
+      width: 100%;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 18px;
+    }
+  }
+
+  #add-location button {
+    margin: 0;
+    height: 60px;
+    font-size: 20px;
+  }
+
+}
+
+.gmnoprint img {
+  max-width: none;
+}

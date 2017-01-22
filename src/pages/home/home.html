@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Map</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <div #map id="map"></div>
+  <div class="row" id="search">
+    <ion-item>
+      <ion-input [(ngModel)]="searchInput" id="autocomplete" type="text" placeholder="Search for a place"></ion-input>
+      <ion-icon [hidden]="!searchInput" name="ios-close" item-right primary (click)="clearSearch()"></ion-icon>
+    </ion-item>
+  </div>
+</ion-content>
+<ion-footer id="add-location" [hidden]="!allowLocationAdd">
+  <button ion-button color="secondary" full (click)="addLocation()">Add Location</button>
+</ion-footer>
