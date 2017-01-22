@@ -10,4 +10,10 @@
 
 <ion-content>
   <div #map id="map"></div>
+  <div class="row" id="search">
+    <ion-item>
+      <ion-input [(ngModel)]="searchInput" id="autocomplete" type="text" placeholder="Search" icon="ion-close"></ion-input>
+      <ion-icon [hidden]="!searchInput" name="ios-close" item-right primary (click)="clearSearch()"></ion-icon>
+    </ion-item>
+  </div>
 </ion-content>

@@ -9,4 +9,18 @@ home {
     height: 100%;
   }
 
+  #search {
+    position: absolute;
+    top: 20px;
+    padding: 0 20px;
+    width: 100%;
+    ion-input {
+      background-color: #fff;
+      width: 100%;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 18px;
+    }
+  }
+
 }

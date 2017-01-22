@@ -11,70 +11,56 @@ export class HomePage {
   @ViewChild('map') mapElement: ElementRef;
 
   map: any;
+  autocomplete;
+  searchInput;
   mapInitialised: boolean = false;
-  latitude;
-  longitude;
-  zoom;
+  mapOptions;
 
   constructor(public navCtrl: NavController) {
-    this.latitude = 37.7909475;
-    this.longitude = -122.40695499999998;
-    this.zoom = 12;
-  }
-
-  ngAfterViewInit() {
-    this.loadGoogleMaps();
-  }
-
-  loadGoogleMaps() {
-    if (typeof google == "undefined" || typeof google.maps == "undefined") {
-      console.log("Google maps JavaScript needs to be loaded.");
-      this.disableMap();
-
-      console.log("online, loading map");
-
-      //Load the SDK
-      window['mapInit'] = () => {
-        this.initMap();
-        this.enableMap();
-      };
-
-      let script = document.createElement("script");
-      script.id = "googleMaps";
-
-      script.src = 'http://maps.google.com/maps/api/js?callback=mapInit';
-
-      document.body.appendChild(script);
-    }
-    else {
-      this.initMap();
-      this.enableMap();
-    }
-
-  }
-
-  initMap() {
-    this.mapInitialised = true;
-    let latLng = new google.maps.LatLng(this.latitude, this.longitude);
-
-    let mapOptions = {
-      center: latLng,
-      zoom: this.zoom,
+    this.mapOptions = {
+      center: new google.maps.LatLng(37.7909475, -122.40695499999998),
+      zoom: 12,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       zoomControl: false,
       fullscreenControl: false,
-      streetViewControl: false
+      streetViewControl: false,
+      mapTypeControl: false
     };
-
-    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    this.searchInput = document.getElementById('autocomplete');
+    this._centerMapForPlace = this._centerMapForPlace.bind(this);
   }
 
-  disableMap() {
-    console.log("disable map");
+  ngAfterViewInit() {
+    this._loadGoogleMaps();
+    this._loadAutocomplete(document.getElementById('autocomplete').getElementsByTagName('input')[0]);
   }
 
-  enableMap() {
-    console.log("enable map");
+  clearSearch() {
+    this.searchInput = null;
+  }
+
+  _loadGoogleMaps() {
+    if (typeof google == 'undefined' || typeof google.maps == 'undefined') {
+      console.log('Google maps JavaScript needs to be loaded.');
+      let script = document.createElement('script');
+      script.id = 'googleMaps';
+      script.src = 'http://maps.google.com/maps/api/js?callback=mapInit';
+      document.body.appendChild(script);
+    }
+    else {
+      this.mapInitialised = true;
+      this.map = new google.maps.Map(this.mapElement.nativeElement, this.mapOptions);
+    }
+  }
+
+  _loadAutocomplete(element) {
+    this.autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
+    this.autocomplete.addListener('place_changed', this._centerMapForPlace);
+  }
+
+  _centerMapForPlace() {
+    const place = this.autocomplete.getPlace();
+    this.map.panTo(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()));
   }
 
 }
